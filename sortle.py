@@ -4,13 +4,45 @@ Sorts are done alphabetically
 """
 class Sortle:
     def __init__(self):
-        self.list = []
+        self.list = [] # the word list that the Sortle class does all it's operations on
+        self.length = 5 # length of the words for Wordle the standard is 5
+        self.alphabet = {
+            "a" : 0, "b" : 1, "c" : 2, "d" : 3, "e" : 4, "f" : 5, "g" : 6, "h" : 7, "i" : 8, "j" : 9, 
+            "k" : 10, "l" : 11, "m" : 12, "n" : 13, "o" : 14, "p" : 15, "q" : 16, "r" : 17, 
+            "s" : 18, "t" : 19, "u" : 20, "v" : 21, "w" : 22, "x" : 23, "y" : 24, "z" : 25
+        }
 
-    """ returns the frequency of each letter in the english alphabet for the given list """
-    def count_frequencies(self, list):
-        return None
+    """ returns the frequency of each letter in the english alphabet for the given list
+        in addition to the frequencies of each letter for each spot in the self.length of a word """
+    def CountFrequencies(self, word_list):
+        l = [] # a list to hold all the frequency tabulations
+        for i in range(self.length + 1):
+            a = []
+            for j in range(26): # counts of 0 for each letter in the alphabet for each frequency
+                a.append(0)
+            l.append(a)
+        # the first list will be the letter frequencies across all words
+        # the rest of the lists will be the letter frequencies for each letter spot in the word
+        # ex: _ _ _ _ _ alphabet frequencies for each spot if the word is 5 letters long
+        for word in word_list:
+            for i in range(len(word)):
+                ch = word[i]
+                if (ch.isalpha()):
+                    index = self.alphabet[ch] # get the index of the letter so that the count is appropriately updated
+                    l[0][index] += 1.0 # update the first list with all the letter frequencies
 
-    """ loads a list from the txt file if it's in the format of
+                    # has to be i+1 otherwise it overwrites the first list with frequencies for letters in all the words
+                    l[i+1][index] += 1.0 # update just the list for which spot the letter is in
+
+        # loop through all the lists and divide each element by the number of words in the list to get the frequency of the letter
+        for a in l:
+            for i in range(len(a)):
+                a[i] /= len(word_list)
+
+        self.WriteFrequencyList(l, 'frequency_list.txt')
+        return l
+
+    """ loads a list from the txt file into self.list if it's in the format of
         word
         word
         word
@@ -20,7 +52,24 @@ class Sortle:
         with open(txtfile) as f:
             for line in f:
                 list.append(line.lower())
-        return sorted(list)
+        self.list = sorted(list)
+        return self.list
+
+    """ writes the frequency list to the text file """
+    def WriteFrequencyList(self, list, txtfile):
+        with open(txtfile, "w") as w:
+            for i in range(len(list)):
+                if (i == 0):
+                    w.write("Letter frequcnies for entire word\n")
+                else:
+                    w.write("Letter frequencies for spot "+ str(i) + " out of " + str(self.length) + " in the words\n")
+                lcurr = list[i]
+                indexcurr = 0
+                for k in self.alphabet:
+                    w.write(k + ": " + str(lcurr[indexcurr]) + "\n")
+                    indexcurr += 1
+                w.write("\n")
+            w.close()
 
     """ gets the list from the medium website and strips it of everything but the solution word list
     for site put 1 if the medium website or put 2 if from the source code off New York Times Wordle """

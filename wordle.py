@@ -32,9 +32,11 @@ def main():
     # convert the new york times solution list to just the words 
     sortle.convert_to_clean_solution_list('wordle_lists/nyt_wordle_solution_list.txt', 'wordle_lists/sources/new_york_times.txt', 2)
     # compare the new york times list with the one from medium
-    list1 = sortle.LoadList('wordle_lists/nwt_wordle_solution_list.txt')
+    list1 = sortle.LoadList('wordle_lists/nyt_wordle_solution_list.txt')
     list2 = sortle.LoadList('wordle_lists/medium_wordle_solution_list.txt')
     print(sortle.compare_lists(list1, list2))
+    sortle.CountFrequencies(list1)
+
 
 if __name__ == '__main__':
     main()

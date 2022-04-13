@@ -1,2 +1,3 @@
 https://www.poirrier.ca/notes/wordle/#variant-cheat-mode
 https://alexpeattie.com/blog/establishing-minimum-guesses-wordle/
+https://github.com/deedy/wordle-solver
