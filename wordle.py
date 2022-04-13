@@ -9,8 +9,9 @@ from sortle import *
 class Wordle:
     def __init__(self):
         self.word = "" # the word currently being solved for
-        self.list = [] # all the guessable words
+        self.list = [] # all the guessable words minus the solution words
         self.solution_list = [] # all the words that are part of the solution list
+        self.start_words = ["soare, asier, roast"]
 
     """ gives the word a score """
     def score(self, word):

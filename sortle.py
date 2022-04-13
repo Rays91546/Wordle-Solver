@@ -1,7 +1,10 @@
 """
-This class takes care of reading in lists from text files and sorting them.
-Sorts are done alphabetically 
+This class takes care of reading in lists from text files and counting frequencies of letters from
+the english alphabet for the words.
 """
+from decimal import Decimal
+
+
 class Sortle:
     def __init__(self):
         self.list = [] # the word list that the Sortle class does all it's operations on
@@ -66,7 +69,8 @@ class Sortle:
                 lcurr = list[i]
                 indexcurr = 0
                 for k in self.alphabet:
-                    w.write(k + ": " + str(lcurr[indexcurr]) + "\n")
+                    # round to 5 decimal places
+                    w.write(str(Decimal(lcurr[indexcurr]).quantize(Decimal("1e-5"))) + "\n")
                     indexcurr += 1
                 w.write("\n")
             w.close()
