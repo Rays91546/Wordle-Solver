@@ -1,3 +1,7 @@
+"""
+This class will be used to visualize all the data.
+"""
+
 # library
 import seaborn as sns
 import pandas as pd

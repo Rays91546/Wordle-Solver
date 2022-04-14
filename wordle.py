@@ -1,7 +1,7 @@
 import sys
 
 from numpy import sort
-sys.path.append('Final Project')
+sys.path.append('Wordle-Solver')
 
 from search import *
 from sortle import *
