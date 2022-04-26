@@ -1,9 +1,11 @@
 Word lists:
 
 1. Still need to find all the guessable words list. Or make our own.
+Done
 
 2. The solution list is finalized as I got it from the source code
 of New York Times.
+Done
 
 Starting Word:
 

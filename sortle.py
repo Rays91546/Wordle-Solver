@@ -16,10 +16,12 @@ class Sortle:
         }
 
     """ returns the frequency of each letter in the english alphabet for the given list
-        in addition to the frequencies of each letter for each spot in the self.length of a word """
-    def CountFrequencies(self, word_list):
+        1. first list -> word letter frequency(wlf): counts unique letters in each word
+        2. second list -> general letter frequency(glf): counts all letters in each word
+        3. next self.length=5 lists -> spot letter frequency(slf): counts how much of a letter are in each spot in the word """
+    def CountFrequencies(self, word_list, writeTo):
         l = [] # a list to hold all the frequency tabulations
-        for i in range(self.length + 1):
+        for i in range(self.length + 2):
             a = []
             for j in range(26): # counts of 0 for each letter in the alphabet for each frequency
                 a.append(0)
@@ -27,22 +29,38 @@ class Sortle:
         # the first list will be the letter frequencies across all words
         # the rest of the lists will be the letter frequencies for each letter spot in the word
         # ex: _ _ _ _ _ alphabet frequencies for each spot if the word is 5 letters long
+        num_unique = 0 # this is for the first list
         for word in word_list:
             for i in range(len(word)):
                 ch = word[i]
+                unique_dict = []
+                for z in range(26):
+                    unique_dict.append(0)
                 if (ch.isalpha()):
                     index = self.alphabet[ch] # get the index of the letter so that the count is appropriately updated
-                    l[0][index] += 1.0 # update the first list with all the letter frequencies
+                    
+                    if (unique_dict[index] == 0): # only add the letter if it is unique in the word
+                        l[0][index] += 1.0
+                        unique_dict[index] = 1 # add to dict
+                        num_unique += 1.0
 
-                    # has to be i+1 otherwise it overwrites the first list with frequencies for letters in all the words
-                    l[i+1][index] += 1.0 # update just the list for which spot the letter is in
+                    l[1][index] += 1.0 # update the first list with all the letter frequencies
+
+                    # has to be i+2 otherwise it overwrites the first,second lists with frequencies for letters in all the words
+                    l[i+2][index] += 1.0 # update just the list for which spot the letter is in
 
         # loop through all the lists and divide each element by the number of words in the list to get the frequency of the letter
-        for a in l:
-            for i in range(len(a)):
-                a[i] /= len(word_list)
+        print("word list length: " + str(len(word_list)))
+        print("total letters length: " + str(len(word_list) * self.length))
+        for i in range(len(l)):
+            for j in range(len(a)):
+                if (i == 0):
+                    l[0][j] /= num_unique # we only want to divide by the number of unique letters in each word
+                    print("num unique: " + str(num_unique))
+                else:
+                    l[i][j] /= (len(word_list) * self.length) # length of list times number of letters in word
 
-        self.WriteFrequencyList(l, 'frequency_list.txt')
+        self.WriteFrequencyList(l, writeTo)
         return l
 
     """ loads a list from the txt file into self.list if it's in the format of
@@ -61,11 +79,15 @@ class Sortle:
     """ writes the frequency list to the text file """
     def WriteFrequencyList(self, list, txtfile):
         with open(txtfile, "w") as w:
+            spot = 1
             for i in range(len(list)):
                 if (i == 0):
-                    w.write("Letter frequcnies for entire word\n")
+                    w.write("Unique letter frequecnies for entire word (wlf)\n")
+                elif (i == 1):
+                    w.write("General letter frequencies for entire word(glf)\n")
                 else:
-                    w.write("Letter frequencies for spot "+ str(i) + " out of " + str(self.length) + " in the words\n")
+                    w.write("Letter frequencies for spot "+ str(spot) + " out of " + str(self.length) + " in the words (slf)\n")
+                    spot += 1
                 lcurr = list[i]
                 indexcurr = 0
                 for k in self.alphabet:
@@ -75,16 +97,23 @@ class Sortle:
                 w.write("\n")
             w.close()
 
+    """ writes the list from self.list to the file writeTo """
+    def write_from_self(self, writeTo):
+        with open(writeTo, 'w') as w:
+            self.list = sorted(self.list)
+            for word in self.list:
+                w.write(word)
+
     """ gets the list from the medium website and strips it of everything but the solution word list
     for site put 1 if the medium website or put 2 if from the source code off New York Times Wordle """
     def convert_to_clean_solution_list(self, writeTo, openFile, site):
 
+        list = []
         # open a file to write the cleaned up word list to
         with open(writeTo, 'w') as w:
 
             # open the file with the uncleaned up version of the world solution list
             with open(openFile) as f:
-                list = []
                 if (site == 1): # if word list taken from Medium website
                     for line in f:
 
@@ -102,7 +131,7 @@ class Sortle:
                         if (len(word) == 5):
                             list.append(word.lower())
 
-                else: # if word list taken from New York Times source code
+                elif (site == 2): # if word list taken from New York Times source code
                     word = ""
                     while True:
                         # reading a single character from the file
@@ -121,6 +150,10 @@ class Sortle:
                                     list.append(word.lower() + "\n")
                                     word = ""
                 
+                else: # if writing a word list from self.list to a file
+                    for word in self.list:
+                        list.append(word)
+
                 # sort the list
                 list = sorted(list)
                 # write to the file
@@ -129,6 +162,41 @@ class Sortle:
 
                 f.close() # close the file we're reading from
             w.close() # close the file we're writing to
+        return list
+
+    """ This function grabs all the 5 letter words from the Scrabble list """
+    def guessable_words(self):
+        list = []
+        # open a file to write the cleaned up word list to
+        with open("wordle_lists/5_letter_guessable_words.txt", 'w') as w:
+
+            # open the file with the uncleaned up version of the world solution list
+            with open("wordle_lists/scrabble_list_of_words.txt") as f:
+                firstLine = f.readline() # get rid of first line as its not words
+                counter = 0
+                for line in f:
+                    # get the last entry which is the word we want
+                    word = line
+
+                    # get rid of the new lines
+                    if (word[:-2] == '\n'):
+                        word = word[:-2]
+                    
+                    # only append the word if its of length 5
+                    if (len(word) == 6):
+                        list.append(word.lower())
+                        counter += 1
+                
+                # sort the list
+                #list = sorted(list)
+                print("sorted list of count: " + str(counter))
+                # write to the file
+                for word in list:
+                    w.write(word)
+
+                f.close() # close the file we're reading from
+            w.close() # close the file we're writing to
+        return list
 
     """ returns if lists are identical or not """
     def compare_lists(self, list1, list2):

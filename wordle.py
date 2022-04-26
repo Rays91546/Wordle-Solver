@@ -9,7 +9,7 @@ from sortle import *
 class Wordle:
     def __init__(self):
         self.word = "" # the word currently being solved for
-        self.list = [] # all the guessable words minus the solution words
+        self.guessable_list = [] # all the guessable words minus the solution words
         self.solution_list = [] # all the words that are part of the solution list
         self.start_words = ["soare, asier, roast"]
 
@@ -79,12 +79,23 @@ def main():
     # make a new Sortle class
     sortle = Sortle()
     # convert the new york times solution list to just the words 
-    sortle.convert_to_clean_solution_list('wordle_lists/nyt_wordle_solution_list.txt', 'wordle_lists/sources/new_york_times.txt', 2)
+    #sortle.convert_to_clean_solution_list('wordle_lists/nyt_wordle_solution_list.txt', 'wordle_lists/sources/new_york_times.txt', 2)
     # compare the new york times list with the one from medium
-    list1 = sortle.LoadList('wordle_lists/nyt_wordle_solution_list.txt')
-    list2 = sortle.LoadList('wordle_lists/medium_wordle_solution_list.txt')
-    print(sortle.compare_lists(list1, list2))
-    sortle.CountFrequencies(list1)
+    #list1 = sortle.convert_to_clean_solution_list('wordle_lists/guessable_list_clean.txt', 'wordle_lists/guessable_list.txt', 2)
+    #list2 = sortle.LoadList('wordle_lists/medium_wordle_solution_list.txt')
+    #print(sortle.compare_lists(list1, list2))
+    #sortle.CountFrequencies(list1)
+    #list_guessable = sortle.guessable_words()
+    #freq_table_guessable = sortle.CountFrequencies(list_guessable)
+    #freq_table_1 = sortle.CountFrequencies(list1, 'data_visualization/guessable_list_freq.txt')
+
+    guessable_list = sortle.LoadList('wordle_lists/nyt_wordle_guessable_list.txt')
+    solution_list = sortle.LoadList('wordle_lists/nyt_wordle_solution_list.txt')
+    full_list = sortle.LoadList('wordle_lists/nyt_full_list.txt')
+
+    sortle.CountFrequencies(guessable_list, 'data_visualization/txt/guessable_list_freqs.txt')
+    sortle.CountFrequencies(solution_list, 'data_visualization/txt/solution_list_freqs.txt')
+    sortle.CountFrequencies(full_list, 'data_visualization/txt/full_list_freqs.txt')
 
 
 if __name__ == '__main__':
