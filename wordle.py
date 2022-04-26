@@ -96,7 +96,7 @@ def main():
     sortle.CountFrequencies(guessable_list, 'data_visualization/txt/guessable_list_freqs.txt')
     sortle.CountFrequencies(solution_list, 'data_visualization/txt/solution_list_freqs.txt')
     sortle.CountFrequencies(full_list, 'data_visualization/txt/full_list_freqs.txt')
-
+    #sortle.unique_test()
 
 if __name__ == '__main__':
     main()

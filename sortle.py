@@ -15,6 +15,20 @@ class Sortle:
             "s" : 18, "t" : 19, "u" : 20, "v" : 21, "w" : 22, "x" : 23, "y" : 24, "z" : 25
         }
 
+    def unique_test(self):
+        word = "apple"
+        unique_dict = []
+        for z in range(26):
+            unique_dict.append(0)
+        for i in range(len(word)):
+                ch = word[i]
+                if (ch.isalpha()):
+                    index = self.alphabet[ch] # get the index of the letter so that the count is appropriately updated
+                    
+                    if (unique_dict[index] == 0): # only add the letter if it is unique in the word
+                        print("unique letter: " + ch)
+                        unique_dict[index] = 1 # add to dict
+
     """ returns the frequency of each letter in the english alphabet for the given list
         1. first list -> word letter frequency(wlf): counts unique letters in each word
         2. second list -> general letter frequency(glf): counts all letters in each word
@@ -31,11 +45,12 @@ class Sortle:
         # ex: _ _ _ _ _ alphabet frequencies for each spot if the word is 5 letters long
         num_unique = 0 # this is for the first list
         for word in word_list:
+            # populate unique dict to only count unique letters
+            unique_dict = []
+            for z in range(26):
+                unique_dict.append(0)
             for i in range(len(word)):
                 ch = word[i]
-                unique_dict = []
-                for z in range(26):
-                    unique_dict.append(0)
                 if (ch.isalpha()):
                     index = self.alphabet[ch] # get the index of the letter so that the count is appropriately updated
                     
@@ -55,8 +70,8 @@ class Sortle:
         for i in range(len(l)):
             for j in range(len(a)):
                 if (i == 0):
-                    l[0][j] /= num_unique # we only want to divide by the number of unique letters in each word
-                    print("num unique: " + str(num_unique))
+                    l[0][j] /= len(word_list) # we only want to divide by the number of unique letters in each word
+                    #print("num unique: " + str(num_unique))
                 else:
                     l[i][j] /= (len(word_list) * self.length) # length of list times number of letters in word
 
