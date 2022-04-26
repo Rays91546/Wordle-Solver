@@ -1,4 +1,5 @@
-sol = solution list
+full = full list
+solution = solution list
 gul = guessable list
 
 glf = general letter frequency:
